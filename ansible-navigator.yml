@@ -38,7 +38,6 @@ ansible-navigator:
         - AWS_ACCESS_KEY_ID
         - AWS_SECRET_ACCESS_KEY
         - AWS_SESSION_TOKEN
-        - CDP_LICENSE_FILE
         # Optional pre-existing SSH key
         # - SSH_PRIVATE_KEY_FILE
       set:
@@ -48,12 +47,22 @@ ansible-navigator:
         ANSIBLE_DEPRECATION_WARNINGS: false
         ANSIBLE_HOST_KEY_CHECKING: false
         ANSIBLE_SSH_RETRIES: 10
-    image: ghcr.io/cloudera-labs/cloudera-ce-aws:latest
+        # The license lives at ~/license.txt on this box. Set here (not passed from the shell) so a
+        # run cannot start without it: 2026-09-21 (#358) a session that had not exported the
+        # variable invented a placeholder license at another path.
+        CDP_LICENSE_FILE: /home/tunas/license.txt
+    # arm64-native EE: the 1.0.0 tag is multi-arch; pin the arch explicitly (no --platform needed on aarch64)
+    image: ghcr.io/cloudera-labs/cloudera-ce-aws:1.0.0-arm64
     pull:
-      policy: tag
+      policy: missing
     volume-mounts:
-      - src: "${CDP_LICENSE_FILE}"
-        dest: "${CDP_LICENSE_FILE}"
+      - src: "/home/tunas/license.txt"
+        dest: "/home/tunas/license.txt"
+      # PATCH (#292): EE image drift — see patches/ and cloudera-ce-aws-runbook.md §2b
+      - src: "/home/tunas/cloudera-ce-aws/patches/jdk_facts.py"
+        dest: "/usr/share/ansible/collections/ansible_collections/cloudera/exe/plugins/modules/jdk_facts.py"
+      - src: "/home/tunas/cloudera-ce-aws/patches/RedHat-pre.yml"
+        dest: "/usr/share/ansible/collections/ansible_collections/cloudera/exe/roles/caddy/tasks/RedHat-pre.yml"
       # Optional pre-existing SSH key
       # - src: "${SSH_PRIVATE_KEY_FILE}"
       #   dest: "${SSH_PRIVATE_KEY_FILE}"
