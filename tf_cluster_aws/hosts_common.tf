@@ -153,14 +153,16 @@ Host jump
   User ${local.ami_user}
   IdentityFile ${local.private_key_file}
   UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
 
 # Configuration for deployment hosts
-Host *.${local.vpc_private_domain}, ${local.ip_glob}
+Host *.${local.vpc_private_domain} ${local.ip_glob}
   User ${local.ami_user}
   IdentityFile ${local.private_key_file}
   ProxyJump jump
   ForwardAgent yes
   UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
 EOF
 }
 

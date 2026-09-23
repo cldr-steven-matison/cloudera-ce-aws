@@ -65,7 +65,7 @@ module "sdx" {
   name            = "${var.prefix}-sdx"
   quantity        = 1
   image_id        = data.aws_ami.pvc_base.image_id
-  instance_type   = "t3a.xlarge"
+  instance_type   = "r5a.xlarge"
   ssh_key_pair    = aws_key_pair.pvc_base.key_name
   subnet_ids      = module.cluster_network.private_subnets[*].id
   security_groups = [module.cluster_network.intra_cluster_security_group.id]
@@ -105,7 +105,7 @@ module "base_masters" {
   name            = "${var.prefix}-base-master"
   quantity        = 3
   image_id        = data.aws_ami.pvc_base.image_id
-  instance_type   = "t3a.xlarge"
+  instance_type   = "r5a.xlarge"
   ssh_key_pair    = aws_key_pair.pvc_base.key_name
   subnet_ids      = module.cluster_network.private_subnets[*].id
   security_groups = [module.cluster_network.intra_cluster_security_group.id]
@@ -145,7 +145,7 @@ module "base_workers" {
   name            = "${var.prefix}-base-worker"
   quantity        = 4
   image_id        = data.aws_ami.pvc_base.image_id
-  instance_type   = "t3a.xlarge"
+  instance_type   = "r5a.2xlarge"
   ssh_key_pair    = aws_key_pair.pvc_base.key_name
   subnet_ids      = module.cluster_network.private_subnets[*].id
   security_groups = [module.cluster_network.intra_cluster_security_group.id]
