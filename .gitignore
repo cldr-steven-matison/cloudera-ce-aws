@@ -54,3 +54,6 @@ config.yml
 
 # Documentation build artifacts
 docs/zensical/_build
+# Local license symlink and Python bytecode cache
+license.txt
+__pycache__/
